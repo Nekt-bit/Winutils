@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WinUtils</title>
+    <style>
+        /* Windows 11 Fluent Design */
+        :root {
+            /* Dark theme (default) */
+            --bg: #202020;
+            --surface: #2c2c2c;
+            --surface-alt: #383838;
+            --text: #ffffff;
+            --text-dim: #b3b3b3;
+            --accent: #60cdff;
+            --accent-hover: #8ad9ff;
+            --border: #444444;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+            --card-radius: 12px;
+            --btn-radius: 8px;
+        }
+
+        body.light {
+            --bg: #f3f3f3;
+            --surface: #ffffff;
+            --surface-alt: #f9f9f9;
+            --text: #1a1a1a;
+            --text-dim: #666666;
+            --accent: #0078d4;
+            --accent-hover: #1084d9;
+            --border: #d1d1d1;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header like Windows title bar */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo-icon {
+            width: 20px; height: 20px;
+            background: var(--accent);
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .win-btn {
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 14px;
+            border-radius: var(--btn-radius);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: inherit;
+        }
+        .win-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .win-btn:active { transform: scale(0.98); }
+
+        /* Main content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 20px 0 40px;
+        }
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+        }
+
+        /* Cards grid */
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .card:hover {
+            box-shadow: var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .card.winguard {
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .card-icon {
+            width: 48px; height: 48px;
+            background: var(--surface-alt);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .card-content { flex: 1; min-width: 0; }
+
+        .badges {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-weight: 500;
+        }
+        .badge.alpha {
+            background: rgba(255,107,107,0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,107,107,0.3);
+        }
+        .badge.free {
+            background: rgba(102,187,106,0.15);
+            color: #66bb6a;
+            border: 1px solid rgba(102,187,106,0.3);
+        }
+        .badge.stable {
+            background: rgba(96,205,255,0.15);
+            color: var(--accent);
+            border: 1px solid rgba(96,205,255,0.3);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 14px;
+        }
+
+        .win-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: var(--btn-radius);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background 0.1s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .win-link:hover { background: var(--accent-hover); }
+        .win-link:active { transform: scale(0.99); }
+
+        .card.winguard .win-link {
+            background: #ff6b6b;
+        }
+        .card.winguard .win-link:hover {
+            background: #ff5252;
+        }
+
+        /* Modal - Windows style dialog */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dialog {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 420px;
+            width: 92%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: slideUp 0.2s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(12px); opacity: 0.9; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .dialog-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .dialog-icon {
+            width: 32px; height: 32px;
+            background: rgba(255,107,107,0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #ff6b6b;
+        }
+        .dialog-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #ff6b6b;
+        }
+
+        .dialog-text {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.45;
+        }
+
+        .progress {
+            height: 4px;
+            background: var(--surface-alt);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #ff6b6b;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .dialog-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .dialog-btn {
+            padding: 8px 20px;
+            border-radius: var(--btn-radius);
+            border: 1px solid var(--border);
+            background: var(--surface-alt);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .dialog-btn:hover { background: var(--border); }
+        .dialog-btn.primary {
+            background: #ff6b6b;
+            border-color: #ff6b6b;
+            color: #fff;
+        }
+        .dialog-btn.primary:hover { background: #ff5252; }
+        .dialog-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 24px 20px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+        }
+
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .card { flex-direction: column; text-align: center; }
+            .dialog-actions { flex-direction: column-reverse; }
+            .dialog-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span class="logo-icon"></span>
+            WinUtils
+        </div>
+        <div class="controls">
+            <button class="win-btn" onclick="toggleTheme()" id="themeBtn">Light</button>
+            <button class="win-btn" onclick="toggleLang()" id="langBtn">EN</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1 data-key="hero_title">WinUtils</h1>
+            <p data-key="hero_desc">Полезные утилиты для Windows в одном месте</p>
+        </section>
+
+        <div class="grid">
+            <!-- WINGUARD -->
+            <div class="card winguard">
+                <div class="card-icon">🛡️</div>
+                <div class="card-content">
+                    <div class="badges">
+                        <span class="badge alpha" data-key="alpha">ALPHA</span>
+                        <span class="badge free" data-key="free">FREE</span>
+                    </div>
+                    <h3 data-key="wg_title">WINGUARD</h3>
+                    <p data-key="wg_desc">Системный защитник. Внимание: альфа-версия, часть функций может не работать.</p>
+                    <button class="win-link" onclick="openWarn()">
+                        <span data-key="download">Скачать</span> →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rufus -->
+            <div class="card">
+                <div class="card-icon">🔥</div>
+                <div class="card-content">
+                    <div class="badges">
+                        <span class="badge stable" data-key="stable">STABLE</span>
+                    </div>
+                    <h3>Rufus</h3>
+                    <p data-key="rufus_desc">Создание загрузочных USB-накопителей. Официальная версия с GitHub.</p>
+                    <a href="https://github.com/pbatard/rufus/releases/download/v4.13/rufus-4.13.exe" class="win-link">
+                        <span data-key="download">Скачать</span> →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Windows-style dialog -->
+    <div class="modal" id="warnModal">
+        <div class="dialog">
+            <div class="dialog-header">
+                <div class="dialog-icon">⚠️</div>
+                <div class="dialog-title" data-key="warn_title">Предупреждение</div>
+            </div>
+            <div class="dialog-text" data-key="warn_text">
+                Вы загружаете <strong>WINGUARD (Alpha)</strong>.<br>
+                Часть функций может не работать. Используйте на свой страх и риск.
+            </div>
+            <div class="progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="dialog-actions">
+                <button class="dialog-btn" onclick="closeWarn()" data-key="cancel">Отмена</button>
+                <button class="dialog-btn primary" id="confirmBtn" disabled>
+                    <span data-key="wait">Подождите</span> <span id="timerNum">5</span>с
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div data-key="footer">© 2026 WinUtils.</div>
+    </footer>
+
+    <script>
+        // Links
+        const WG_LINK = "https://workupload.com/file/HQxP7sexhvj";
+
+        // Translations
+        const t = {
+            ru: {
+                hero_title: "WinUtils",
+                hero_desc: "Полезные утилиты для Windows в одном месте",
+                alpha: "ALPHA", free: "FREE", stable: "STABLE",
+                wg_title: "WINGUARD",
+                wg_desc: "Системный защитник. Внимание: альфа-версия, часть функций может не работать.",
+                rufus_desc: "Создание загрузочных USB-накопителей. Официальная версия с GitHub.",
+                download: "Скачать",
+                footer: "© 2026 WinUtils.",
+                warn_title: "Предупреждение",
+                warn_text: "Вы загружаете <strong>WINGUARD (Alpha)</strong>.<br>Часть функций может не работать. Используйте на свой страх и риск.",
+                cancel: "Отмена",
+                wait: "Подождите",
+                confirm: "Всё равно скачать",
+                redirect: "Переход к загрузке..."
+            },
+            en: {
+                hero_title: "WinUtils",
+                hero_desc: "Useful Windows utilities in one place",
+                alpha: "ALPHA", free: "FREE", stable: "STABLE",
+                wg_title: "WINGUARD",
+                wg_desc: "System protector. Warning: alpha version, some features may not work.",
+                rufus_desc: "Create bootable USB drives. Official release from GitHub.",
+                download: "Download",
+                footer: "© 2026 WinUtils.",
+                warn_title: "Warning",
+                warn_text: "You are downloading <strong>WINGUARD (Alpha)</strong>.<br>Some features may not work. Use at your own risk.",
+                cancel: "Cancel",
+                wait: "Please wait",
+                confirm: "Download anyway",
+                redirect: "Redirecting to download..."
+            }
+        };
+
+        let lang = 'ru';
+        let dark = true;
+
+        function toggleTheme() {
+            dark = !dark;
+            document.body.classList.toggle('light');
+            document.getElementById('themeBtn').innerText = dark ? 'Light' : 'Dark';
+        }
+
+        function toggleLang() {
+            lang = lang === 'ru' ? 'en' : 'ru';
+            document.getElementById('langBtn').innerText = lang === 'ru' ? 'EN' : 'RU';
+            updateTexts();
+        }
+
+        function updateTexts() {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (t[lang][key]) el.innerHTML = t[lang][key];
+            });
+            updateConfirmBtn();
+        }
+
+        function updateConfirmBtn() {
+            const btn = document.getElementById('confirmBtn');
+            if (btn.disabled) {
+                btn.innerHTML = `<span data-key="wait">${t[lang].wait}</span> <span id="timerNum">5</span>с`;
+            } else {
+                btn.innerText = t[lang].confirm;
+            }
+        }
+
+        // Modal
+        const modal = document.getElementById('warnModal');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const progressFill = document.getElementById('progressFill');
+        const timerNum = document.getElementById('timerNum');
+        let countdown;
+
+        function openWarn() {
+            modal.classList.add('show');
+            startTimer();
+        }
+
+        function closeWarn() {
+            modal.classList.remove('show');
+            clearInterval(countdown);
+        }
+
+        function startTimer() {
+            let sec = 5;
+            timerNum.innerText = sec;
+            progressFill.style.width = '0%';
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('primary');
+            updateConfirmBtn();
+
+            countdown = setInterval(() => {
+                sec--;
+                timerNum.innerText = sec;
+                progressFill.style.width = `${((5 - sec) / 5) * 100}%`;
+                if (sec <= 0) {
+                    clearInterval(countdown);
+                    confirmBtn.disabled = false;
+                    confirmBtn.classList.add('primary');
+                    confirmBtn.innerText = t[lang].confirm;
+                    confirmBtn.onclick = doDownload;
+                }
+            }, 1000);
+        }
+
+        function doDownload() {
+            alert(t[lang].redirect);
+            window.location.href = WG_LINK;
+        }
+
+        // Close modal on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeWarn();
+        });
+
+        // Keyboard: Esc to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                closeWarn();
+            }
+        });
+    </script>
+</body>
+</html>
